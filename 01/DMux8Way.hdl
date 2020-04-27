@@ -1,0 +1,41 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/DMux8Way.hdl
+
+/**
+ * 8-way demultiplexor:
+ * {a, b, c, d, e, f, g, h} = {in, 0, 0, 0, 0, 0, 0, 0} if sel == 000
+ *                            {0, in, 0, 0, 0, 0, 0, 0} if sel == 001
+ *                            etc.
+ *                            {0, 0, 0, 0, 0, 0, 0, in} if sel == 111
+ */
+
+CHIP DMux8Way {
+    IN in, sel[3];
+    OUT a, b, c, d, e, f, g, h;
+
+    PARTS:
+    // Initially get a 1x4 DMux to give out four outputs
+    DMux4Way (in=in, sel=sel[1..2], a=Tempa, b=Tempb, c=Tempc, d=Tempd);
+
+    // Then on, get 1x2 DMux to give out two outputs per each previous output.
+    DMux (in=Tempa, sel=sel[0], a=a, b=b);
+    DMux (in=Tempb, sel=sel[0], a=c, b=d);
+    DMux (in=Tempc, sel=sel[0], a=e, b=f);
+    DMux (in=Tempd, sel=sel[0], a=g, b=h);
+
+
+/* * This implementation also valid. 1x4 DMux is implemented explicit whereas in
+     above impelementation previously designed chip is reused.  DMux (in=in,
+     sel=sel[2], a=Tempa, b=Tempb);
+
+    DMux (in=Tempa, sel=sel[1], a=Temp2a, b=Temp2b);
+    DMux (in=Tempb, sel=sel[1], a=Temp2c, b=Temp2d);
+
+    DMux (in=Temp2a, sel=sel[0], a=a, b=b);
+    DMux (in=Temp2b, sel=sel[0], a=c, b=d);
+    DMux (in=Temp2c, sel=sel[0], a=e, b=f);
+    DMux (in=Temp2d, sel=sel[0], a=g, b=h);
+*/
+}

@@ -1,0 +1,24 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Or8Way.hdl
+
+/**
+ * 8-way Or:
+ * out = (in[0] or in[1] or ... or in[7])
+ */
+
+CHIP Or8Way {
+    IN in[8];
+    OUT out;
+
+    PARTS:
+    // Use single bit Or gate to sequentially add each bit of the bus.
+    Or (a=in[0], b=in[1],out=TempOut1);
+    Or (a=TempOut1, b=in[2],out=TempOut2);
+    Or (a=TempOut2, b=in[3],out=TempOut3);
+    Or (a=TempOut3, b=in[4],out=TempOut4);
+    Or (a=TempOut4, b=in[5],out=TempOut5);
+    Or (a=TempOut5, b=in[6],out=TempOut6);
+    Or (a=TempOut6, b=in[7],out=out);
+}
