@@ -14,27 +14,12 @@ CHIP Mux {
     OUT out;
 
     PARTS:
-    // implemented as per truth table. Whenever 1 occurs, corresponding terms
-    // are ANDed. Finally all terms are ORed.
-    Not (in=a, out=Nota);
-    Not (in=b, out=Notb);
-    Not (in=sel, out=Notsel);
-
-    // term 1
-    And (a=a, b=Notb, out=aAndNotb);
-    And (a=aAndNotb, b=Notsel, out = aAndNotbAndNotsel);
-    // term 2
-    And (a=a, b=b, out=aAndb);
-    And (a=aAndb, b=Notsel, out = aAndbAndNotsel);
-    // term 3
-    And (a=Nota, b=b, out=NotaAndb);
-    And (a=NotaAndb, b=sel, out = NotaAndbAndsel);
-    // term 4
-    And (a=aAndb, b=sel, out = aAndbAndsel);
-
-    // Finally all terms are Ored.
-    Or (a=aAndNotbAndNotsel, b=aAndbAndNotsel, out=out1);
-    Or (a=NotaAndbAndsel, b=aAndbAndsel, out=out2);
-    Or (a=out1, b=out2, out=out);
-
+    // implemented as per truth table. Whenever 1 occurs, corresponding terms 
+	// after simplification are taken into consideration.
+	// out = (a And (Not sel)) Or (b And sel)
+	// used NAND to implement to reduce gate count
+	Not (in = sel, out = Notsel);
+	Nand(a = a, b =Notsel, out = nanda);
+	Nand(a = b, b = sel, out = nandb);
+	Nand(a = nanda, b =nandb, out = out);
 }
